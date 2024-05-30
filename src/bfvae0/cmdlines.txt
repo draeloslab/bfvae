@@ -54,4 +54,11 @@ python main_save_z.py --dset_dir ../../new_vae/beta_vae/data --dataset oval_dspr
 python main_refined_traverse.py --dset_dir ../../new_vae/beta_vae/data --dataset oval_dsprites --eta 0.05 --gamma 35.0 --z_dim 10 --run_id 0 --rseed 20 --lr_VAE 1e-4 --lr_D 1e-4 --ckpt_load_iter 300000 --num_workers 0 --batch_size 64
 
 
+###################################################################################################
 
+#
+# sachin notes
+#
+python main.py --dset_dir /nfs/turbo/umms-adraelos/sachinks/u19/data/ --dataset dsprites --run_id 0 --rseed 10 --num_workers 0 --batch_size 64 --max_iter 3e5 --lr_VAE 1e-4 --beta1_VAE 0.9 --beta2_VAE 0.999 --lr_D 1e-4 --beta1_D 0.5 --beta2_D 0.9 --z_dim 10 --eta 0.05 --gamma 35.0 --print_iter 50 --ckpt_save_iter 5000 --output_save_iter 2000 --eval_metrics --eval_metrics_iter 5000 --ckpt_load_iter 0 --viz_on --viz_ll_iter 10 --viz_la_iter 50 --viz_port 8097
+
+ --print_iter 500 --ckpt_save_iter 5000 --output_save_iter 2000 --eval_metrics --eval_metrics_iter 5000

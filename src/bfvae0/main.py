@@ -45,7 +45,7 @@ def create_parser():
     # training hyperparameters
     parser.add_argument( '--max_iter', default=1e6, type=float, 
       help='maximum number of batch iterations' )
-    parser.add_argument( '--batch_size', default=64, type=int, 
+    parser.add_argument( '--batch_size', default=32, type=int, 
       help='batch size' )
     
     parser.add_argument( '--eta', default=1.0, type=float, 
@@ -75,9 +75,9 @@ def create_parser():
       help='dimension of the representation z' )
 
     # dataset
-    parser.add_argument( '--dset_dir', default='data', type=str, 
+    parser.add_argument( '--dset_dir', default='/nfs/turbo/umms-adraelos/sachinks/u19/data', type=str, 
       help='dataset directory' )
-    parser.add_argument( '--dataset', default='CelebA', type=str, 
+    parser.add_argument( '--dataset', default='dsprites', type=str, 
       help='dataset name' )
     parser.add_argument( '--num_workers', default=2, type=int, 
       help='dataloader num_workers' )
@@ -96,7 +96,7 @@ def create_parser():
       help='output saved every # iters' )
 
     parser.add_argument( '--eval_metrics', 
-      action='store_true', default=False, 
+      action='store_true', default=True, 
       help='whether to evaluate disentanglement metrics' )
     parser.add_argument( '--eval_metrics_iter', default=50, type=int, 
       help='evaluate metrics every # iters' )
