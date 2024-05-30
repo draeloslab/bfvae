@@ -460,7 +460,7 @@ class Solver(object):
 
         factor_ids = range(0, len(self.latent_sizes))  # true factor ids
         vars_per_factor = np.zeros([num_pairs,self.z_dim])  
-        true_factor_ids = np.zeros(num_pairs, np.int)  # true factor ids
+        true_factor_ids = np.zeros(num_pairs, int)  # true factor ids
 
         # prepare data pairs for majority-vote classification
         i = 0
@@ -558,7 +558,7 @@ class Solver(object):
 
         factor_ids = range(0, len(self.latent_sizes))  # true factor ids
         vars_per_factor = np.zeros([num_pairs,self.z_dim])  
-        true_factor_ids = np.zeros(num_pairs, np.int)  # true factor ids
+        true_factor_ids = np.zeros(num_pairs, int)  # true factor ids
 
         # prepare data pairs for majority-vote classification
         i = 0
@@ -645,7 +645,7 @@ class Solver(object):
         fname = os.path.join(self.output_dir_recon, 'recon_%s.jpg' % iters) 
         mkdirs(self.output_dir_recon)
         save_image( 
-          tensor=merged, filename=fname, nrow=2*int(np.sqrt(n)), 
+          tensor=merged, fp=fname, nrow=2*int(np.sqrt(n)), 
           pad_value=1
         )
 
@@ -666,7 +666,7 @@ class Solver(object):
         fname = os.path.join(self.output_dir_synth, 'synth_%s.jpg' % iters)
         mkdirs(self.output_dir_synth)
         save_image( 
-          tensor=X, filename=fname, nrow=int(np.sqrt(howmany)), 
+          tensor=X, fp=fname, nrow=int(np.sqrt(howmany)), 
           pad_value=1
         )
         
@@ -918,7 +918,7 @@ class Solver(object):
                 I = torch.cat([IMG[key], gifs[i][j]], dim=0)
                 save_image(
                   tensor=I.cpu(),
-                  filename=os.path.join(out_dir, '%s_%03d.jpg' % (key,j)),
+                  fp=os.path.join(out_dir, '%s_%03d.jpg' % (key,j)),
                   nrow=1+self.z_dim, pad_value=1 )
             # make animated gif
             grid2gif(

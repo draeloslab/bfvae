@@ -36,6 +36,7 @@ class Solver(object):
         self.print_iter = args.print_iter
         self.ckpt_save_iter = args.ckpt_save_iter
         self.output_save_iter = args.output_save_iter
+        self.eval_metrics = False
         
         # data info
         self.dset_dir = args.dset_dir
