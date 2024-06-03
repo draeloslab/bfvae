@@ -75,7 +75,7 @@ def create_parser():
       help='dimension of the representation z' )
 
     # dataset
-    parser.add_argument( '--dset_dir', default='/nfs/turbo/umms-adraelos/sachinks/u19/data', type=str, 
+    parser.add_argument( '--dset_dir', default='/home/sachinks/Code/data-core-u19/bfvae/src/bfvae0/data', type=str, 
       help='dataset directory' )
     parser.add_argument( '--dataset', default='dsprites', type=str, 
       help='dataset name' )

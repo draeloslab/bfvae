@@ -575,7 +575,7 @@ class Solver(object):
 
         factor_ids = range(0, len(self.latent_sizes))  # true factor ids
         vars_per_factor = np.zeros([num_pairs,self.z_dim])  
-        true_factor_ids = np.zeros(num_pairs, np.int)  # true factor ids
+        true_factor_ids = np.zeros(num_pairs, int)  # true factor ids
 
         # prepare data pairs for majority-vote classification
         i = 0
@@ -677,7 +677,7 @@ class Solver(object):
 
         factor_ids = range(0, len(self.latent_sizes))  # true factor ids
         vars_per_factor = np.zeros([num_pairs,self.z_dim])  
-        true_factor_ids = np.zeros(num_pairs, np.int)  # true factor ids
+        true_factor_ids = np.zeros(num_pairs, int)  # true factor ids
 
         # prepare data pairs for majority-vote classification
         i = 0

@@ -233,7 +233,6 @@ class Solver(object):
         #### create a new model or load a previously saved model
         
         self.ckpt_load_iter = args.ckpt_load_iter
-
         if self.ckpt_load_iter == 0:  # create a new model
         
             # create a vae model
