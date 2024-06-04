@@ -59,6 +59,22 @@ class Solver(object):
                 # classes ({0,1,...,K}-valued); (737280 x 5)
             self.latent_sizes = np.array([3, 6, 40, 32, 32])
             self.N = self.latent_values.shape[0]
+
+        elif self.dataset == 'latent2':
+            n_c1 = 2
+            n_c2 = 6
+
+            class1 = np.arange(n_c1)
+            class2 = np.arange(n_c2)
+
+            mesh1, mesh2 = np.meshgrid(class1, class2)
+            latent_classes = np.vstack([mesh1.ravel(), mesh2.ravel()]).T
+            self.latent_classes = latent_classes
+
+            latent_values = latent_classes.astype(float)
+            latent_values[:, 1] = 0.5+latent_values[:, 1]/10
+            self.latent_values = latent_values
+            self.N = self.latent_values.shape[0]
                 
         # groundtruth factor labels
         elif self.dataset=='oval_dsprites':
@@ -145,6 +161,9 @@ class Solver(object):
                 # latent values (actual values);(202599 x 40)
             self.latent_sizes = np.array([2]*40)
             self.N = self.latent_values.shape[0]
+        else:
+            
+            raise NotImplementedError
 
         # networks and optimizers
         self.batch_size = args.batch_size

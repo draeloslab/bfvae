@@ -75,7 +75,7 @@ def create_parser():
       help='dimension of the representation z' )
 
     # dataset
-    parser.add_argument( '--dset_dir', default='/home/sachinks/Code/data-core-u19/bfvae/src/bfvae0/data', type=str, 
+    parser.add_argument( '--dset_dir', default='/nfs/turbo/umms-adraelos/sachinks/u19/data', type=str, # /nfs/turbo/umms-adraelos/sachinks/u19/data
       help='dataset directory' )
     parser.add_argument( '--dataset', default='dsprites', type=str, 
       help='dataset name' )
@@ -96,7 +96,7 @@ def create_parser():
       help='output saved every # iters' )
 
     parser.add_argument( '--eval_metrics', 
-      action='store_true', default=True, 
+      action='store_true', default=False, 
       help='whether to evaluate disentanglement metrics' )
     parser.add_argument( '--eval_metrics_iter', default=50, type=int, 
       help='evaluate metrics every # iters' )

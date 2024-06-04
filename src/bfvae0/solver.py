@@ -36,13 +36,16 @@ class Solver(object):
         self.print_iter = args.print_iter
         self.ckpt_save_iter = args.ckpt_save_iter
         self.output_save_iter = args.output_save_iter
+        self.eval_metrics = args.eval_metrics
+        if self.eval_metrics:
+            self.eval_metrics_iter = args.eval_metrics_iter
         
         # data info
         self.dset_dir = args.dset_dir
         self.dataset = args.dataset
         if args.dataset.endswith('dsprites'):
             self.nc = 1
-        elif args.dataset == '3dfaces':
+        elif args.dataset in ['3dfaces', 'latent2']:
             self.nc = 1
         else:
             self.nc = 3
@@ -69,10 +72,22 @@ class Solver(object):
                 # classes ({0,1,...,K}-valued); (737280 x 5)
             self.latent_sizes = np.array([3, 6, 40, 32, 32])
             self.N = self.latent_values.shape[0]
-            
-            if args.eval_metrics:
-                self.eval_metrics = True
-                self.eval_metrics_iter = args.eval_metrics_iter
+
+        elif self.dataset == 'latent2':
+            n_c1 = 2
+            n_c2 = 6
+
+            class1 = np.arange(n_c1)
+            class2 = np.arange(n_c2)
+
+            mesh1, mesh2 = np.meshgrid(class1, class2)
+            latent_classes = np.vstack([mesh1.ravel(), mesh2.ravel()]).T
+            self.latent_classes = latent_classes
+
+            latent_values = latent_classes.astype(float)
+            latent_values[:, 1] = 0.5+latent_values[:, 1]/10
+            self.latent_values = latent_values
+            self.N = self.latent_values.shape[0]
                 
         # groundtruth factor labels
         elif self.dataset=='oval_dsprites':
@@ -165,6 +180,8 @@ class Solver(object):
             if args.eval_metrics:
                 self.eval_metrics = True
                 self.eval_metrics_iter = args.eval_metrics_iter
+        else:
+            raise NotImplementedError
 
         # networks and optimizers
         self.batch_size = args.batch_size
@@ -239,6 +256,9 @@ class Solver(object):
             if args.dataset.endswith('dsprites'):
                 self.encoder = Encoder1(self.z_dim)
                 self.decoder = Decoder1(self.z_dim)
+            elif args.dataset.endswith('latent2'):
+                self.encoder = EncoderL(self.z_dim)
+                self.decoder = DecoderL(self.z_dim)
             elif args.dataset == '3dfaces':
                 self.encoder = Encoder3(self.z_dim)
                 self.decoder = Decoder3(self.z_dim)
@@ -251,7 +271,7 @@ class Solver(object):
                 self.encoder = Encoder_ResNet(self.z_dim)
                 self.decoder = Decoder_ResNet(self.z_dim)
             else:
-                pass  #self.VAE = FactorVAE2(self.z_dim)
+                raise NotImplementedError
             
             # create a prior variance model
             self.pvnet = PriorVarianceNetwork(self.z_dim)
@@ -316,7 +336,8 @@ class Solver(object):
 
             # reset data iterators for each epoch
             if iteration % iter_per_epoch == 0:
-                print('==== epoch %d done ====' % epoch)
+                if self.dataset.lower() == 'latent2' and epoch%500 == 0:
+                    print('==== epoch %d done ====' % epoch)
                 epoch+=1
                 iterator1 = iter(self.data_loader)
                 iterator2 = iter(self.data_loader)
@@ -335,7 +356,6 @@ class Solver(object):
             
             # relevance vector
             pv, logpv = self.pvnet()
-            
             # kl loss
             kls = 0.5 * ( \
                   -1 - logvar + logpv + (mu**2+std**2)/pv )  # (n x z_dim)
@@ -444,7 +464,10 @@ class Solver(object):
                
             # save output images (recon, synth, etc.)
             if iteration % self.output_save_iter == 0:
-                
+                if self.dataset.lower() == 'latent2':
+                    s_up = 100 # scale up image for visualization
+                    X = torch.kron(X.unsqueeze(-1), torch.ones(1,1,s_up,s_up))
+                    X_recon = torch.kron(X_recon.unsqueeze(-1), torch.ones(1,1,s_up,s_up))
                 # 1) save the recon images
                 self.save_recon(iteration, X, torch.sigmoid(X_recon).data)   
                 
@@ -454,6 +477,8 @@ class Solver(object):
                 # 3) save the latent traversed images
                 if self.dataset.lower() == '3dchairs':
                     self.save_traverse(iteration, limb=-2, limu=2, inter=0.5)
+                elif self.dataset.lower() == 'latent2':
+                    pass
                 else:
                     self.save_traverse(iteration, limb=-3, limu=3, inter=0.1)
                     
@@ -745,7 +770,10 @@ class Solver(object):
             Z = Z.cuda()
     
         # do synthesis 
-        X = torch.sigmoid(decoder(Z)).data.cpu()
+        X = torch.sigmoid(decoder(Z)).data.cpu()        
+        if self.dataset.lower() == 'latent2':
+            s_up = 100
+            X = torch.kron(X.unsqueeze(-1), torch.ones(1,1,s_up,s_up))
     
         # save the results as image
         fname = os.path.join(self.output_dir_synth, 'synth_%s.jpg' % iters)
