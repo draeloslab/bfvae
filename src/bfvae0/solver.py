@@ -322,7 +322,7 @@ class Solver(object):
         print('Start loading data...')
         self.data_loader = create_dataloader(self.args)
         print('...done')
-        
+
         # iterators from dataloader
         iterator1 = iter(self.data_loader)
         iterator2 = iter(self.data_loader)
@@ -410,7 +410,7 @@ class Solver(object):
             
             # reparam'ed samples
             if self.use_cuda:
-                Eps = torch.cuda.FloatTensor(mu.shape).normal_()
+                Eps = torch.randn(mu.shape, device='cuda')
             else:
                 Eps = torch.randn(mu.shape)
             Z = mu + Eps*std

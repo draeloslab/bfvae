@@ -360,7 +360,7 @@ class Solver(object):
             
             # reparam'ed samples
             if self.use_cuda:
-                Eps = torch.cuda.FloatTensor(mu.shape).normal_()
+                Eps = torch.randn(mu.shape, device='cuda')
             else:
                 Eps = torch.randn(mu.shape)
             Z = mu + Eps*std
@@ -402,7 +402,7 @@ class Solver(object):
             
             # reparam'ed samples
             if self.use_cuda:
-                Eps = torch.cuda.FloatTensor(mu.shape).normal_()
+                Eps = torch.randn(mu.shape, device='cuda')
             else:
                 Eps = torch.randn(mu.shape)
             Z = mu + Eps*std
