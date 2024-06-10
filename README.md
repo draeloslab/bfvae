@@ -5,13 +5,13 @@ The work was accepted by ICCV 2019 Oral.**
 [[Paper Link]]( NA ).
 <br>
 
+_Further instructions added by Sachin Salim_
 ## Setup instructions
-(Added by Sachin Salim)
-FIRST: INSTALL CORRECT DRIVER for GPU, see https://stackoverflow.com/questions/30820513/what-is-the-correct-version-of-cuda-for-my-nvidia-driver/30820690
-
-AFTER THIS FILE IS INSTALLED, if you have a GPU be sure to install `conda forge cudnn`
-
-install: `conda env create -f reqs.yaml`
+If you don't have the GPU drivers installed:
+1. Install correct driver for the GPU, see [here](https://stackoverflow.com/questions/30820513/what-is-the-correct-version-of-cuda-for-my-nvidia-driver/30820690)
+2. After this file is installed, if you have a GPU be sure to install `conda forge cudnn`
+After installing the drivers:
+3. Install dependencies: `conda env create -f reqs.yaml`
 
 ## Execute instructions
 * Activate conda env: `conda activate bfvae_env`
