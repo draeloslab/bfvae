@@ -23,6 +23,6 @@ After installing the drivers:
 To run custom dataset:
 * Navigate to the src folder: `cd src/`
 * Generate custom dataset by `python synthesize_data.py --dataset <dataset> --output_dir <save_dir>`
-* Execute: `python main.py --dataset <dataset> --output_dir <save_dir>`
+* Execute: `python main.py --dataset <dataset> --dset_dir <save_dir>`
 
 
