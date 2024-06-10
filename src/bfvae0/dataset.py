@@ -114,6 +114,14 @@ def create_dataloader(args, williams=None):
         train_kwargs = {'data_tensor': data}
         dset = CustomTensorDataset
     
+    elif name.lower() == 'latent2_1':
+    
+        root = os.path.join( dset_dir, 'latent2_1/data.npy' )
+        data = np.load(root)
+        data = torch.from_numpy(data).unsqueeze(1).float()
+        train_kwargs = {'data_tensor': data}
+        dset = CustomTensorDataset
+
     elif name.lower() == 'oval_dsprites':
     
         latent_classes = np.load( os.path.join( dset_dir, 

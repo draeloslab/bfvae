@@ -45,7 +45,7 @@ class Solver(object):
         self.dataset = args.dataset
         if args.dataset.endswith('dsprites'):
             self.nc = 1
-        elif args.dataset in ['3dfaces', 'latent2']:
+        elif args.dataset in ['3dfaces', 'latent2', 'latent2_1']:
             self.nc = 1
         else:
             self.nc = 3
@@ -86,6 +86,22 @@ class Solver(object):
 
             latent_values = latent_classes.astype(float)
             latent_values[:, 1] = 0.5+latent_values[:, 1]/10
+            self.latent_values = latent_values
+            self.N = self.latent_values.shape[0]
+        
+        elif self.dataset == 'latent2_1':
+            n_c1 = 10
+            n_c2 = 10
+
+            class1 = np.arange(n_c1)
+            class2 = np.arange(n_c2)
+
+            mesh1, mesh2 = np.meshgrid(class1, class2)
+            latent_classes = np.vstack([mesh1.ravel(), mesh2.ravel()]).T
+            self.latent_classes = latent_classes
+
+            latent_values = latent_classes.astype(float)
+            latent_values = latent_values/10
             self.latent_values = latent_values
             self.N = self.latent_values.shape[0]
                 
@@ -256,7 +272,7 @@ class Solver(object):
             if args.dataset.endswith('dsprites'):
                 self.encoder = Encoder1(self.z_dim)
                 self.decoder = Decoder1(self.z_dim)
-            elif args.dataset.endswith('latent2'):
+            elif args.dataset.startswith('latent2'):
                 self.encoder = EncoderL(self.z_dim)
                 self.decoder = DecoderL(self.z_dim)
             elif args.dataset == '3dfaces':
@@ -336,7 +352,7 @@ class Solver(object):
 
             # reset data iterators for each epoch
             if iteration % iter_per_epoch == 0:
-                if self.dataset.lower() == 'latent2' and epoch%500 == 0:
+                if self.dataset.lower().startswith('latent2') and epoch%500 == 0:
                     print('==== epoch %d done ====' % epoch)
                 epoch+=1
                 iterator1 = iter(self.data_loader)
@@ -464,7 +480,7 @@ class Solver(object):
                
             # save output images (recon, synth, etc.)
             if iteration % self.output_save_iter == 0:
-                if self.dataset.lower() == 'latent2':
+                if self.dataset.lower().startswith('latent2'):
                     s_up = 100 # scale up image for visualization
                     X = torch.kron(X.unsqueeze(-1), torch.ones(1,1,s_up,s_up))
                     X_recon = torch.kron(X_recon.unsqueeze(-1), torch.ones(1,1,s_up,s_up))
@@ -477,7 +493,7 @@ class Solver(object):
                 # 3) save the latent traversed images
                 if self.dataset.lower() == '3dchairs':
                     self.save_traverse(iteration, limb=-2, limu=2, inter=0.5)
-                elif self.dataset.lower() == 'latent2':
+                elif self.dataset.lower().startswith('latent2'):
                     pass
                 else:
                     self.save_traverse(iteration, limb=-3, limu=3, inter=0.1)
@@ -771,7 +787,7 @@ class Solver(object):
     
         # do synthesis 
         X = torch.sigmoid(decoder(Z)).data.cpu()        
-        if self.dataset.lower() == 'latent2':
+        if self.dataset.lower().startswith('latent2'):
             s_up = 100
             X = torch.kron(X.unsqueeze(-1), torch.ones(1,1,s_up,s_up))
     
