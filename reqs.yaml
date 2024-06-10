@@ -1,0 +1,21 @@
+name: bfvae_env
+channels:
+  - defaults
+dependencies:  
+  - python=3.9.18
+  - pip=23.3.1
+  - ipykernel
+  - numpy
+  - matplotlib
+  - pandas
+  - scikit-learn
+  - scipy
+  - tqdm
+  - seaborn
+  - pyyaml
+  - jupyter
+  - pip:
+    - imageio==2.34.1
+    - torch==2.2.0
+    - torchsummary==1.5.1
+    - torchvision==0.17.0
