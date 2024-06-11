@@ -7,22 +7,25 @@ The work was accepted by ICCV 2019 Oral.**
 
 _Further instructions added by Sachin Salim_
 ## Setup instructions
+### GPU drivers
 If you don't have the GPU drivers installed:
-1. Install correct driver for the GPU, see [here](https://stackoverflow.com/questions/30820513/what-is-the-correct-version-of-cuda-for-my-nvidia-driver/30820690)
-2. After this file is installed, if you have a GPU be sure to install `conda forge cudnn`
+* Install correct driver for the GPU, see [here](https://stackoverflow.com/questions/30820513/what-is-the-correct-version-of-cuda-for-my-nvidia-driver/30820690)
+* After this file is installed, if you have a GPU be sure to install `conda forge cudnn`
+### Dependencies
 After installing the drivers:
-3. Install dependencies: `conda env create -f reqs.yaml`
+* Install dependencies: `conda env create -f reqs.yaml`
+* Activate conda env: `conda activate bfvae_env`
+### Datasets
+* Download/synthesize dataset by `python src/setup_dataset.py --dataset <dataset> --save_dir <save_dir>`
+Currently supported datasets to be automatically downloaded/synthesized are:
+1. dsprites (Downloaded by script from [here](https://github.com/google-deepmind/dsprites-dataset/blob/master/dsprites_ndarray_co1sh3sc6or40x32y32_64x64.npz))
+2. latent2_0 (Synthesized)
+3. latent2_1 (Synthesized)
 
 ## Execute instructions
-* Activate conda env: `conda activate bfvae_env`
 * If in Greatlakes HPC, load cuda module: `module load cuda cudnn`
 * Navigate to the model folder: `cd src/bfvae<id>/`
 * Read `cmdlines.txt` for specific instructions on running various scripts
-** Eg: `python main.py --dataset dsprites --dset_dir <dset_dir>`
-
-To run custom dataset:
-* Navigate to the src folder: `cd src/`
-* Generate custom dataset by `python synthesize_data.py --dataset <dataset> --output_dir <save_dir>`
-* Execute: `python main.py --dataset <dataset> --dset_dir <save_dir>`
+* Eg: `python main.py --dataset dsprites --dset_dir <dset_dir>`
 
 
