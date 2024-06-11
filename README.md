@@ -26,6 +26,9 @@ After installing the drivers:
 * If in Greatlakes HPC, load cuda module: `module load cuda cudnn`
 * Navigate to the model folder: `cd src/bfvae<id>/`
 * Read `cmdlines.txt` for specific instructions on running various scripts
-* Eg: `python main.py --dataset dsprites --dset_dir <dset_dir>`
+* Eg: To train the model on dsprites, execute `python main.py --dataset dsprites --dset_dir <dset_dir>`
 
-
+### Analyse training
+* After the training, The training loss is saved in `records/`
+* Execute `python analyse_training.py --model bfvae<id> --train_filename <train_filename>`
+* Pass the respective file inside `records/` folder as the `train_filename`
