@@ -19,9 +19,9 @@ def main(args):
     os.environ['XDG_RUNTIME_DIR'] = '/tmp/runtime-sachinks'
 
     # Define the file path
-    file_path = f'src/{args.model}/records/{args.train_filename}.txt'
+    file_path = f'{args.model}/records/{args.train_filename}.txt'
 
-    output_dir = f'src/{args.model}/outputs/{args.train_filename}'
+    output_dir = f'{args.model}/outputs/{args.train_filename}'
     os.makedirs(output_dir, exist_ok=True)
 
     # Initialize lists to hold the values
@@ -125,7 +125,7 @@ def main(args):
     plt.figure(figsize=(12, 8))
     for pv_i in range(len(pv_values[0])):
         smoothed_sig = gaussian_filter1d(np.array(pv_values)[:,pv_i], 5)
-        plt.plot(smoothed_sig, label=f'pv[{pv_i}]')
+        plt.plot(smoothed_sig, label=f'pv[{pv_i+1}]')
 
     plt.xlabel('Iteration')
     plt.ylabel('Loss Value')
