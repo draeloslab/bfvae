@@ -43,7 +43,7 @@ def create_parser():
       help='enable cuda' )
     
     # training hyperparameters
-    parser.add_argument( '--max_iter', default=1e6, type=float, 
+    parser.add_argument( '--max_iter', default=1e5, type=float, 
       help='maximum number of batch iterations' )
     parser.add_argument( '--batch_size', default=32, type=int, 
       help='batch size' )
@@ -88,11 +88,11 @@ def create_parser():
         '(default=0 to start from the scratch)' )
 
     # saving directories and checkpoint/sample iterations
-    parser.add_argument( '--print_iter', default=20, type=int, 
+    parser.add_argument( '--print_iter', default=500, type=int, 
       help='print losses iter' )
     parser.add_argument( '--ckpt_save_iter', default=10000, type=int, 
       help='checkpoint saved every # iters' )
-    parser.add_argument( '--output_save_iter', default=50, type=int, 
+    parser.add_argument( '--output_save_iter', default=10000, type=int, 
       help='output saved every # iters' )
 
     parser.add_argument( '--eval_metrics', 

@@ -73,11 +73,11 @@ class Solver(object):
             self.latent_sizes = np.array([3, 6, 40, 32, 32])
             self.N = self.latent_values.shape[0]
 
-        elif name.lower() in ['latent2_0', 'latent2_1']:
+        elif self.dataset.lower() in ['latent2_0', 'latent2_1']:
             self.latent_values = np.load( os.path.join( self.dset_dir, 
-              name.lower(), 'latents_values.npy'))
+              self.dataset.lower(), 'latents_values.npy'))
             self.latent_classes = np.load( os.path.join( self.dset_dir, 
-              name.lower(), 'latent_classes.npy'))
+              self.dataset.lower(), 'latents_classes.npy'))
             self.N = self.latent_values.shape[0]
                 
         # groundtruth factor labels

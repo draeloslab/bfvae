@@ -72,8 +72,8 @@ python main_refined_traverse.py --dataset dsprites --ckpt_load_iter 300000 --gam
 greatlakes: --dset_dir /nfs/turbo/umms-adraelos/sachinks/u19/data
 ceres: --dset_dir /home/sachinks/Code/data-core-u19/bfvae/src/bfvae0/data
 
-latent2: python main.py --dataset latent2_1 --batch_size 4 --z_dim 2 --output_save_iter 10000 --dset_dir 
+latent2: python main.py --dataset latent2_1 --batch_size 10 --z_dim 2 --output_save_iter 10000 --dset_dir 
 
-dsprites: python main.py --dataset dsprites --print_iter 200 --output_save_iter 10000 --eval_metrics_iter 500 --max_iter 360000 --ckpt_load_iter 5000 --dset_dir 
+dsprites: python main.py --dataset dsprites --dset_dir 
 
-python main.py --dataset latent2_1 --batch_size 10 --z_dim 2 --output_save_iter 10000 --dset_dir /nfs/turbo/umms-adraelos/sachinks/u19/data --lr_VAE 1e-3 --lr_D 1e-3 --max_iter 100000 --print_iter 100
+python main.py --dataset latent2_1 --batch_size 10 --z_dim 3 --output_save_iter 10000 --dset_dir /nfs/turbo/umms-adraelos/sachinks/u19/data --lr_VAE 1e-3 --lr_D 1e-3 --max_iter 100000 --print_iter 1000

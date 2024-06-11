@@ -6,10 +6,6 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
 
 def create_parser():
-    '''
-    Create a parser for command-line arguments
-    '''
-    
     parser = argparse.ArgumentParser()
 
     parser.add_argument( '--model', type=str, choices=['bfvae0', 'bfvae1', 'bfvae2'], required=True,
@@ -17,12 +13,11 @@ def create_parser():
     parser.add_argument( '--train_filename', type=str, required=True,
       help='filename of training loss' )
 
-    parser.add_argument( '--loss_iter_intv', default=20, type=int, required=True,
-      help='iter frequency of losses' )
-
     return parser
 
 def main(args):
+    os.environ['XDG_RUNTIME_DIR'] = '/tmp/runtime-sachinks'
+
     # Define the file path
     file_path = f'{args.model}/records/{args.train_filename}.txt'
 
@@ -30,6 +25,7 @@ def main(args):
     os.makedirs(output_dir, exist_ok=True)
 
     # Initialize lists to hold the values
+    iter_list = []
     vae_loss_list = []
     dis_loss_list = []
     recon_list = []
@@ -41,6 +37,7 @@ def main(args):
     metric2_values = []
 
     # Regular expression patterns to extract the losses
+    iter_pattern = re.compile(r'\[iter (\d+)')
     vae_loss_pattern = re.compile(r'vae_loss:\s([\d\.]+)')
     dis_loss_pattern = re.compile(r'dis_loss:\s([\d\.]+)')
     recon_pattern = re.compile(r'recon:\s([\d\.]+)')
@@ -54,6 +51,10 @@ def main(args):
     # Read the file and extract the values
     with open(file_path, 'r') as file:
         for line in file:
+            iter_match = iter_pattern.search(line)
+            if iter_match:
+                iter_list.append(int(iter_match.group(1)))
+                
             vae_loss_match = vae_loss_pattern.search(line)
             if vae_loss_match:
                 vae_loss_list.append(float(vae_loss_match.group(1)))
@@ -93,19 +94,20 @@ def main(args):
                 metric2_values.append(float(metric2_match.group(1)))
 
 
-    loss_iter_intv = args.loss_iter_intv
-    loss_iter_max = loss_iter_intv*len(recon_list)
+    loss_iter_intv = iter_list[0]
+    loss_iter_max = loss_iter_intv*len(iter_list)
 
     # is_log = False
     for is_log in [True, False]:
         plt.figure(figsize=(12, 8))
 
-        plt.plot(gaussian_filter1d(vae_loss_list, 10)[0:], label='Total Loss', color='blue')
-        plt.plot(gaussian_filter1d(recon_list, 10)[0:], label='Reconstruction Loss', color='green')
-        plt.plot(gaussian_filter1d(kl_list, 10)[0:], label='KL Divergence', color='purple')
-        plt.plot(gaussian_filter1d(tc_list, 10)[0:], label='TC Loss', color='orange')
-        plt.plot(gaussian_filter1d(pv_reg_list, 10)[0:], label='PV Regularization', color='brown')
-        plt.plot(gaussian_filter1d(dis_loss_list, 10)[0:], label='Discriminator Loss', color='red')
+        smooth_scale = 10
+        plt.plot(gaussian_filter1d(vae_loss_list, smooth_scale), label='Total Loss', color='blue')
+        plt.plot(gaussian_filter1d(recon_list, smooth_scale), label='Reconstruction Loss', color='green')
+        plt.plot(gaussian_filter1d(kl_list, smooth_scale), label='KL Divergence', color='purple')
+        plt.plot(gaussian_filter1d(tc_list, smooth_scale), label='TC Loss', color='orange')
+        plt.plot(gaussian_filter1d(pv_reg_list, smooth_scale), label='PV Regularization', color='brown')
+        plt.plot(gaussian_filter1d(dis_loss_list, smooth_scale), label='Discriminator Loss', color='red')
         plt.xlabel('Iteration')
 
         if is_log:
@@ -133,6 +135,7 @@ def main(args):
 
     plt.xticks(ticks=np.linspace(0, loss_iter_max//loss_iter_intv, 5), labels=[str(x * loss_iter_intv) for x in np.linspace(0, loss_iter_max//loss_iter_intv, 5,dtype=int)])
     plt.savefig(os.path.join(output_dir, f'pv.png'))
+    print("Figures saved in:", output_dir)
 
 if __name__ == '__main__':    
     parser = create_parser()
