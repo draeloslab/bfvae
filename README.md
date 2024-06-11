@@ -17,10 +17,10 @@ After installing the drivers:
 * Activate conda env: `conda activate bfvae_env`
 ### Datasets
 * Download/synthesize dataset by `python src/setup_dataset.py --dataset <dataset> --save_dir <save_dir>`
-Currently supported datasets to be automatically downloaded/synthesized are:
-1. dsprites (Downloaded by script from [here](https://github.com/google-deepmind/dsprites-dataset/blob/master/dsprites_ndarray_co1sh3sc6or40x32y32_64x64.npz))
-2. latent2_0 (Synthesized)
-3. latent2_1 (Synthesized)
+* Currently supported datasets to be automatically downloaded/synthesized are:
+  1. dsprites (Downloaded by script from [here](https://github.com/google-deepmind/dsprites-dataset/blob/master/dsprites_ndarray_co1sh3sc6or40x32y32_64x64.npz))
+  2. latent2_0 (Synthesized)
+  3. latent2_1 (Synthesized)
 
 ## Execute instructions
 * If in Greatlakes HPC, load cuda module: `module load cuda cudnn`
