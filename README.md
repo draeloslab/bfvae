@@ -30,5 +30,5 @@ After installing the drivers:
 
 ### Analyse training
 * After the training, The training loss is saved in `records/`
-* Execute `python analyse_training.py --model bfvae<id> --train_filename <train_filename>`
+* Execute `python src/analyse_training.py --model bfvae<id> --train_filename <train_filename>`
 * Pass the respective file inside `records/` folder as the `train_filename`
