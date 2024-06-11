@@ -106,17 +106,9 @@ def create_dataloader(args, williams=None):
         train_kwargs = {'data_tensor': data}
         dset = CustomTensorDataset
     
-    elif name.lower() == 'latent2':
+    elif name.lower() in ['latent2_0', 'latent2_1']:
     
-        root = os.path.join( dset_dir, 'latent2/data.npy' )
-        data = np.load(root)
-        data = torch.from_numpy(data).unsqueeze(1).float()
-        train_kwargs = {'data_tensor': data}
-        dset = CustomTensorDataset
-    
-    elif name.lower() == 'latent2_1':
-    
-        root = os.path.join( dset_dir, 'latent2_1/data.npy' )
+        root = os.path.join( dset_dir, name.lower(), 'data.npy' )
         data = np.load(root)
         data = torch.from_numpy(data).unsqueeze(1).float()
         train_kwargs = {'data_tensor': data}

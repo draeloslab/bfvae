@@ -52,17 +52,17 @@ def main(args):
         class2 = np.arange(n_c2)
 
         mesh1, mesh2 = np.meshgrid(class1, class2)
-        latent_classes = np.vstack([mesh1.ravel(), mesh2.ravel()]).T
+        latents_classes = np.vstack([mesh1.ravel(), mesh2.ravel()]).T
 
-        latent_values = latent_classes.astype(float)
-        latent_values[:, 1] = 0.5+latent_values[:, 1]/10
+        latents_values = latents_classes.astype(float)
+        latents_values[:, 1] = 0.5+latents_values[:, 1]/10
 
         # create dataset
-        num_samples = latent_values.shape[0]
+        num_samples = latents_values.shape[0]
         data = np.zeros((num_samples, 4))
 
         for i in range(num_samples):
-            t0, t1 = latent_values[i,0], latent_values[i,1]
+            t0, t1 = latents_values[i,0], latents_values[i,1]
             data[i,0] = t0 * t1
             data[i,1] = t0 * (1.5-t1)
             data[i,2] = (1-t0) * t1
@@ -77,17 +77,17 @@ def main(args):
         class2 = np.arange(n_c2)
 
         mesh1, mesh2 = np.meshgrid(class1, class2)
-        latent_classes = np.vstack([mesh1.ravel(), mesh2.ravel()]).T
+        latents_classes = np.vstack([mesh1.ravel(), mesh2.ravel()]).T
 
-        latent_values = latent_classes.astype(float)
-        latent_values = latent_values/n_c1
+        latents_values = latents_classes.astype(float)
+        latents_values = latents_values/n_c1
 
         # create dataset
-        num_samples = latent_values.shape[0]
+        num_samples = latents_values.shape[0]
         data = np.zeros((num_samples, 4))
 
         for i in range(num_samples):
-            t0, t1 = latent_values[i,0], latent_values[i,1]
+            t0, t1 = latents_values[i,0], latents_values[i,1]
             data[i,0] = 0.5*(t0+t1)
             data[i,1] = 0.5*(t0**5 + (1-t1)**2)
             data[i,2] = t0/(1+t1)
@@ -100,9 +100,10 @@ def main(args):
         save_dir = f'{args.save_dir}/{args.dataset}'
         os.makedirs(save_dir, exist_ok=True)
         
-        np.save(f'{save_dir}/latent_classes.npy', latent_classes)
-        np.save(f'{save_dir}/latent_values.npy', latent_values)
+        np.save(f'{save_dir}/latents_classes.npy', latents_classes)
+        np.save(f'{save_dir}/latents_values.npy', latents_values)
         np.save(f'{save_dir}/data.npy', data)
+        print("Dataset synthesized successfully.")
 
 
 if __name__ == '__main__':    

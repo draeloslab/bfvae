@@ -45,7 +45,7 @@ class Solver(object):
         self.dataset = args.dataset
         if args.dataset.endswith('dsprites'):
             self.nc = 1
-        elif args.dataset in ['3dfaces', 'latent2', 'latent2_1']:
+        elif args.dataset in ['3dfaces', 'latent2_0', 'latent2_1']:
             self.nc = 1
         else:
             self.nc = 3
@@ -73,36 +73,11 @@ class Solver(object):
             self.latent_sizes = np.array([3, 6, 40, 32, 32])
             self.N = self.latent_values.shape[0]
 
-        elif self.dataset == 'latent2':
-            n_c1 = 2
-            n_c2 = 6
-
-            class1 = np.arange(n_c1)
-            class2 = np.arange(n_c2)
-
-            mesh1, mesh2 = np.meshgrid(class1, class2)
-            latent_classes = np.vstack([mesh1.ravel(), mesh2.ravel()]).T
-            self.latent_classes = latent_classes
-
-            latent_values = latent_classes.astype(float)
-            latent_values[:, 1] = 0.5+latent_values[:, 1]/10
-            self.latent_values = latent_values
-            self.N = self.latent_values.shape[0]
-        
-        elif self.dataset == 'latent2_1':
-            n_c1 = 10
-            n_c2 = 10
-
-            class1 = np.arange(n_c1)
-            class2 = np.arange(n_c2)
-
-            mesh1, mesh2 = np.meshgrid(class1, class2)
-            latent_classes = np.vstack([mesh1.ravel(), mesh2.ravel()]).T
-            self.latent_classes = latent_classes
-
-            latent_values = latent_classes.astype(float)
-            latent_values = latent_values/10
-            self.latent_values = latent_values
+        elif name.lower() in ['latent2_0', 'latent2_1']:
+            self.latent_values = np.load( os.path.join( self.dset_dir, 
+              name.lower(), 'latents_values.npy'))
+            self.latent_classes = np.load( os.path.join( self.dset_dir, 
+              name.lower(), 'latent_classes.npy'))
             self.N = self.latent_values.shape[0]
                 
         # groundtruth factor labels
