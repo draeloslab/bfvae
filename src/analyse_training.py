@@ -12,16 +12,18 @@ def create_parser():
       help='model used' )
     parser.add_argument( '--train_filename', type=str, required=True,
       help='filename of training loss' )
+    parser.add_argument( '--smooth', default=1, type=float, 
+      help='smoothen the plot' )
 
     return parser
 
 def main(args):
-    os.environ['XDG_RUNTIME_DIR'] = '/tmp/runtime-sachinks'
+    # os.environ['XDG_RUNTIME_DIR'] = '/tmp/runtime-sachinks'
 
     # Define the file path
     file_path = f'{args.model}/records/{args.train_filename}.txt'
 
-    output_dir = f'{args.model}/outputs/{args.train_filename}'
+    output_dir = f'{args.model}/outputs/{args.train_filename}/figs'
     os.makedirs(output_dir, exist_ok=True)
 
     # Initialize lists to hold the values
@@ -96,18 +98,17 @@ def main(args):
 
     loss_iter_intv = iter_list[0]
     loss_iter_max = loss_iter_intv*len(iter_list)
+    smooth_scale = args.smooth
 
-    # is_log = False
     for is_log in [True, False]:
         plt.figure(figsize=(12, 8))
 
-        smooth_scale = 10
         plt.plot(gaussian_filter1d(vae_loss_list, smooth_scale), label='Total Loss', color='blue')
         plt.plot(gaussian_filter1d(recon_list, smooth_scale), label='Reconstruction Loss', color='green')
         plt.plot(gaussian_filter1d(kl_list, smooth_scale), label='KL Divergence', color='purple')
-        plt.plot(gaussian_filter1d(tc_list, smooth_scale), label='TC Loss', color='orange')
+        plt.plot(6.4*gaussian_filter1d(tc_list, smooth_scale), label='TC Loss', color='orange')
         plt.plot(gaussian_filter1d(pv_reg_list, smooth_scale), label='PV Regularization', color='brown')
-        plt.plot(gaussian_filter1d(dis_loss_list, smooth_scale), label='Discriminator Loss', color='red')
+        # plt.plot(gaussian_filter1d(dis_loss_list, smooth_scale), label='Discriminator Loss', color='red')
         plt.xlabel('Iteration')
 
         if is_log:
@@ -124,8 +125,9 @@ def main(args):
 
     plt.figure(figsize=(12, 8))
     for pv_i in range(len(pv_values[0])):
-        smoothed_sig = gaussian_filter1d(np.array(pv_values)[:,pv_i], 5)
+        smoothed_sig = gaussian_filter1d(np.array(pv_values)[:,pv_i], smooth_scale)
         plt.plot(smoothed_sig, label=f'pv[{pv_i+1}]')
+        # plt.ylim([0,1.2])
 
     plt.xlabel('Iteration')
     plt.ylabel('Loss Value')

@@ -231,11 +231,11 @@ class Solver(object):
         self.ckpt_dir = os.path.join("ckpts", self.name)
 
         # outputs
-        self.output_dir_recon = os.path.join("outputs", self.name + '_recon')  
+        self.output_dir_recon = os.path.join("outputs", self.name, 'recon')  
           # dir for reconstructed images
-        self.output_dir_synth = os.path.join("outputs", self.name + '_synth')  
+        self.output_dir_synth = os.path.join("outputs", self.name, 'synth')  
           # dir for synthesized images
-        self.output_dir_trvsl = os.path.join("outputs", self.name + '_trvsl')  
+        self.output_dir_trvsl = os.path.join("outputs", self.name, 'trvsl')  
           # dir for latent traversed images
         
         #### create a new model or load a previously saved model
@@ -372,7 +372,7 @@ class Solver(object):
             DZ = self.D(Z)
             
             # tc loss
-            loss_tc = (DZ[:,0] - DZ[:,1]).mean()
+            loss_tc = ((DZ[:,0] - DZ[:,1])**2).mean()
             
             # prior variance regularizer
             loss_pv_reg = ((pv-1.0)**2).sum()
@@ -457,8 +457,9 @@ class Solver(object):
             if iteration % self.output_save_iter == 0:
                 if self.dataset.lower().startswith('latent2'):
                     s_up = 100 # scale up image for visualization
-                    X = torch.kron(X.unsqueeze(-1), torch.ones(1,1,s_up,s_up))
-                    X_recon = torch.kron(X_recon.unsqueeze(-1), torch.ones(1,1,s_up,s_up))
+                    # breakpoint()
+                    X = torch.kron(X.unsqueeze(-1), torch.ones(1,1,s_up,s_up, device=X.device))
+                    X_recon = torch.kron(X_recon.unsqueeze(-1), torch.ones(1,1,s_up,s_up, device=X_recon.device))
                 # 1) save the recon images
                 self.save_recon(iteration, X, torch.sigmoid(X_recon).data)   
                 
