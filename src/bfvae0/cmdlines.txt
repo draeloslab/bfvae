@@ -83,4 +83,4 @@ gamme correction: --gamma 0.1
 
 
 
-python main.py --dataset latent2_1 --batch_size 10 --z_dim 8 --lr_VAE 1e-3 --lr_D 1e-3 --output_save_iter 1000 --max_iter 10_000 --print_iter 100 --gamma 0.1
+python main.py --dataset latent2_1 --batch_size 10 --z_dim 4 --lr_VAE 1e-3 --lr_D 1e-3 --output_save_iter 10_000 --max_iter 100_000 --print_iter 1000

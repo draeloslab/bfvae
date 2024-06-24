@@ -28,7 +28,7 @@ def normal_init(m):
         m.weight.data.fill_(1)
         if m.bias is not None:
             m.bias.data.fill_(0)
-    
+            
 ###############################################################################
 
 class PriorAlphaParams(nn.Module):
@@ -216,6 +216,110 @@ class Decoder1(nn.Module):
         out = F.relu(self.deconv4(out))
         out = F.relu(self.deconv5(out))
         x_recon = self.deconv6(out)
+            
+        return x_recon
+
+
+#-----------------------------------------------------------------------------#
+#-----------------------------------------------------------------------------#
+        
+class EncoderL(nn.Module):
+    
+    '''
+    encoder architecture for the "latent2" data
+    '''
+    
+    ####
+    def __init__(self, z_dim=2):
+        
+        super(EncoderL, self).__init__()
+        
+        self.input_dim = 4
+        self.z_dim = z_dim
+        self.h1 = 120
+
+        self.fc1 = nn.Linear(self.input_dim, self.h1)
+        self.fc2 = nn.Linear(self.h1, self.h1)
+        self.fc3 = nn.Linear(self.h1, self.h1)
+        self.fc4 = nn.Linear(self.h1, 2*z_dim) 
+        
+        # initialize parameters
+        self.weight_init()
+
+
+    ####
+    def weight_init(self, mode='normal'):
+        
+        if mode == 'kaiming':
+            initializer = kaiming_init
+        elif mode == 'normal':
+            initializer = normal_init
+
+        for m in self._modules:
+            initializer(self._modules[m])
+
+
+    ####
+    def forward(self, x):
+        
+        out = F.relu(self.fc1(x))
+        out = F.relu(self.fc2(out))
+        out = F.relu(self.fc3(out))
+        out = out.view(out.size(0), -1)
+        stats = self.fc4(out)
+        mu = stats[:, :self.z_dim]
+        logvar = stats[:, self.z_dim:]
+        std = torch.sqrt(torch.exp(logvar))
+        
+        return mu, std, logvar
+
+
+#-----------------------------------------------------------------------------#
+        
+class DecoderL(nn.Module):
+    
+    '''
+    decoder architecture for the "dsprites" data
+    '''
+    
+    ####
+    def __init__(self, z_dim=2):
+        
+        super(DecoderL, self).__init__()
+
+        self.input_dim = 4
+        self.z_dim = z_dim
+        self.h1 = 120
+
+        self.fc1 = nn.Linear(self.z_dim, self.h1)
+        self.fc2 = nn.Linear(self.h1, self.h1)
+        self.fc3 = nn.Linear(self.h1, self.h1)
+        self.fc4 = nn.Linear(self.h1, self.input_dim)
+
+        # initialize parameters
+        self.weight_init()
+
+
+    ####
+    def weight_init(self, mode='normal'):
+        
+        if mode == 'kaiming':
+            initializer = kaiming_init
+        elif mode == 'normal':
+            initializer = normal_init
+
+        for m in self._modules:
+            initializer(self._modules[m])
+
+
+    ####
+    def forward(self, z):
+        
+        out = F.relu(self.fc1(z))
+        out = F.relu(self.fc2(out))
+        out = F.relu(self.fc3(out))
+        x_recon = self.fc4(out)
+        x_recon = x_recon.view(out.size(0), 1, self.input_dim)
             
         return x_recon
 
