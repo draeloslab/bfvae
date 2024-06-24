@@ -79,6 +79,9 @@ class Solver(object):
             self.latent_classes = np.load( os.path.join( self.dset_dir, 
               self.dataset.lower(), 'latents_classes.npy'))
             self.N = self.latent_values.shape[0]
+
+        elif self.dataset=='hc_count':
+            pass
                 
         # groundtruth factor labels
         elif self.dataset=='oval_dsprites':
@@ -249,7 +252,10 @@ class Solver(object):
                 self.decoder = Decoder1(self.z_dim)
             elif args.dataset.startswith('latent2'):
                 self.encoder = EncoderL(self.z_dim)
-                self.decoder = DecoderL(self.z_dim)
+                self.decoder = DecoderL(self.z_dim) 
+            elif self.dataset=='hc_count':
+                self.encoder = EncoderGenome(self.z_dim)
+                self.decoder = DecoderGenome(self.z_dim)
             elif args.dataset == '3dfaces':
                 self.encoder = Encoder3(self.z_dim)
                 self.decoder = Decoder3(self.z_dim)
@@ -365,6 +371,9 @@ class Solver(object):
             X_recon = self.decoder(Z)
             
             # recon loss
+            
+            # loss_recon = F.binary_cross_entropy( 
+            #     X_recon, X, reduction='sum' ).div(X.size(0))
             loss_recon = F.binary_cross_entropy_with_logits( 
                 X_recon, X, reduction='sum' ).div(X.size(0))
 
