@@ -100,14 +100,38 @@ def main(args):
     loss_iter_max = loss_iter_intv*len(iter_list)
     smooth_scale = args.smooth
 
+
+    for is_log in [True, False]:
+        fig, axs = plt.subplots(2, 2, figsize=(12, 8))
+        x = np.arange(0, loss_iter_max, loss_iter_intv)
+        axs[0,0].plot(x, vae_loss_list, color='blue')
+        axs[0,0].set_xlabel('Epoch')
+        axs[0,0].set_ylabel('Loss')
+
+        axs[1,0].plot(x, recon_list, color='green')
+        axs[1,0].set_xlabel('Epoch')
+        axs[1,0].set_ylabel('Reconstruction error')
+
+        axs[0,1].plot(x, kl_list, color='purple')
+        axs[0,1].set_xlabel('Epoch')
+        axs[0,1].set_ylabel('KL')
+        axs[1,1].remove()
+
+        if is_log:
+            plt.yscale('log')
+        log_suffix = ' (logscale)' if is_log else ''
+        
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, f'yid_loss{log_suffix}.png'))
+
     for is_log in [True, False]:
         plt.figure(figsize=(12, 8))
 
-        plt.plot(gaussian_filter1d(vae_loss_list, smooth_scale), label='Total Loss', color='blue')
-        plt.plot(gaussian_filter1d(recon_list, smooth_scale), label='Reconstruction Loss', color='green')
-        plt.plot(gaussian_filter1d(kl_list, smooth_scale), label='KL Divergence', color='purple')
-        plt.plot(6.4*gaussian_filter1d(tc_list, smooth_scale), label='TC Loss', color='orange')
-        plt.plot(gaussian_filter1d(pv_reg_list, smooth_scale), label='PV Regularization', color='brown')
+        plt.plot(gaussian_filter1d(vae_loss_list, smooth_scale), label='Total Loss', color='blue', linewidth=5, alpha=0.2)
+        plt.plot(gaussian_filter1d(recon_list, smooth_scale), label='Reconstruction Loss', color='green', linestyle='dashed')
+        plt.plot(gaussian_filter1d(kl_list, smooth_scale), label='KL Divergence', color='purple', linestyle='dashed')
+        # plt.plot(gaussian_filter1d(tc_list, smooth_scale), label='TC Loss', color='orange')
+        # plt.plot(gaussian_filter1d(pv_reg_list, smooth_scale), label='PV Regularization', color='brown')
         # plt.plot(gaussian_filter1d(dis_loss_list, smooth_scale), label='Discriminator Loss', color='red')
         plt.xlabel('Iteration')
 
@@ -131,7 +155,7 @@ def main(args):
 
     plt.xlabel('Iteration')
     plt.ylabel('Loss Value')
-    plt.title('PV losses over Iterations')
+    plt.title('Prior Variance over Iterations')
     plt.legend()
     plt.grid(True, which="both", ls="--")
 

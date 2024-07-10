@@ -47,6 +47,12 @@ def create_parser():
       help='maximum number of batch iterations' )
     parser.add_argument( '--batch_size', default=32, type=int, 
       help='batch size' )
+      
+    parser.add_argument( '--recon_w', default=1.0, type=float, 
+      help='impact of reconstruction loss' )
+
+    parser.add_argument( '--kl_w', default=1.0, type=float, 
+      help='impact of kl loss' )
     
     parser.add_argument( '--eta', default=1.0, type=float, 
       help='impact of regaularizer for the prior variances' )

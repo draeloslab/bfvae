@@ -84,3 +84,13 @@ gamme correction: --gamma 0.1
 
 
 python main.py --dataset latent2_1 --batch_size 10 --z_dim 4 --lr_VAE 1e-3 --lr_D 1e-3 --output_save_iter 10_000 --max_iter 100_000 --print_iter 1000
+
+python main.py --dataset hc_count --output_save_iter 1_000_000 --print_iter 1000 --max_iter 100_000 --z_dim 20
+
+
+run_5: python main.py --dataset hc_count --gamma 0 --eta 0 --output_save_iter 1_000_000 --print_iter 100 --max_iter 10_000 --ckpt_save_iter 5_000 --z_dim 10 --lr_VAE 1e-2 --lr_D 1e-2 --kl_w 1e-4
+python main.py --dataset hc_count --output_save_iter 1_000_000 --print_iter 100 --max_iter 30_000 --ckpt_save_iter 5_000 --z_dim 10 --lr_VAE 1e-2 --lr_D 1e-2 --run_id 5 --ckpt_load_iter 10_000
+
+
+python main.py --dataset hc_count --output_save_iter 1_000_000 --print_iter 1_000 --max_iter 400_000 --ckpt_save_iter 10_000 --z_dim 10 --lr_VAE 1e-4 --lr_D 1e-4 --gamma 0 --eta 0 --recon_w 1000
+

@@ -70,35 +70,6 @@ class CustomTensorDataset(Dataset):
         
         return self.data_tensor.size(0)
 
-class SparseDataset(Dataset):
-    def __init__(self, sparse_matrices):
-        self.sparse_matrices = sparse_matrices
-
-    def __len__(self):
-        return len(self.sparse_matrices)
-
-    def __getitem__(self, idx):
-        return self.sparse_matrices[idx]
-
-def custom_collate_fn(batch):
-    indices = []
-    values = []
-    shapes = []
-    
-    for mat in batch:
-        coo_matrix = mat.tocoo()
-        indices.append(torch.tensor([coo_matrix.row, coo_matrix.col], dtype=torch.long))
-        values.append(torch.tensor(coo_matrix.data, dtype=torch.float))
-        shapes.append(coo_matrix.shape)
-
-    batched_indices = torch.cat([torch.cat((i, torch.full((1, i.size(1)), b)), dim=0) for b, i in enumerate(indices)], dim=1)
-    batched_values = torch.cat(values)
-    batch_size = len(batch)
-    max_shape = [max(s) for s in zip(*shapes)]
-    batched_shape = [batch_size] + max_shape
-
-    return torch.sparse_coo_tensor(batched_indices, batched_values, size=batched_shape)
-
 
 ###############################################################################
         
@@ -146,16 +117,12 @@ def create_dataloader(args, williams=None):
     
     elif name.lower() == 'hc_count':
     
-        root = os.path.join( dset_dir, 'mouse_hc_counts_mfs.h5ad')
-        adata = ad.read_h5ad("/nfs/turbo/umms-adraelos/sachinks/u19/processed-hc/mouse_hc_counts_mfs.h5ad")
-        dense_array = adata.X[:1000, :].toarray()
-        dense_array_scaled = MinMaxScaler().fit_transform(dense_array)
+        # root = os.path.join( dset_dir, 'mouse_hc_counts_mfs.h5ad')
+        adata = ad.read_h5ad("/nfs/turbo/umms-adraelos/sachinks/u19/processed-hc/mouse_hc_counts_mfs--sampled.h5ad")
+        dense_array_scaled = MinMaxScaler().fit_transform(adata.X.toarray())
         data = torch.tensor(dense_array_scaled).unsqueeze(1).float()
         train_kwargs = {'data_tensor': data}
         dset = CustomTensorDataset
-
-        # train_kwargs = {'sparse_matrices': data}
-        # dset = SparseDataset
 
     elif name.lower() == 'oval_dsprites':
     
@@ -208,11 +175,7 @@ def create_dataloader(args, williams=None):
         raise NotImplementedError
 
     dataset = dset(**train_kwargs)
-    
-    # if name.lower() == 'hc_count':
-    #     dataloader = DataLoader( dataset, batch_size=batch_size, shuffle=True, 
-    #     num_workers=num_workers, pin_memory=True, drop_last=drop_last, collate_fn=custom_collate_fn)
-    # else:
+
     dataloader = DataLoader( dataset, batch_size=batch_size, shuffle=True, 
         num_workers=num_workers, pin_memory=True, drop_last=drop_last )
 

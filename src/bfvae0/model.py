@@ -320,14 +320,13 @@ class EncoderGenome(nn.Module):
         
         super(EncoderGenome, self).__init__()
         
-        self.input_dim = 25957
+        self.input_dim = 2383
         self.z_dim = z_dim
-        self.h1 = 64
 
-        self.fc1 = nn.Linear(self.input_dim, self.h1)
-        self.fc2 = nn.Linear(self.h1, self.h1)
-        self.fc3 = nn.Linear(self.h1, self.h1)
-        self.fc4 = nn.Linear(self.h1, 2*z_dim) 
+        self.fc1 = nn.Linear(self.input_dim, 128)
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, 32)
+        self.fc4 = nn.Linear(32, 2*z_dim) 
         
         # initialize parameters
         self.weight_init()
@@ -372,14 +371,13 @@ class DecoderGenome(nn.Module):
         
         super(DecoderGenome, self).__init__()
 
-        self.input_dim = 25957
+        self.input_dim = 2383
         self.z_dim = z_dim
-        self.h1 = 64
 
-        self.fc1 = nn.Linear(self.z_dim, self.h1)
-        self.fc2 = nn.Linear(self.h1, self.h1)
-        self.fc3 = nn.Linear(self.h1, self.h1)
-        self.fc4 = nn.Linear(self.h1, self.input_dim)
+        self.fc1 = nn.Linear(self.z_dim, 32)
+        self.fc2 = nn.Linear(32, 64)
+        self.fc3 = nn.Linear(64, 128)
+        self.fc4 = nn.Linear(128, self.input_dim)
 
         # initialize parameters
         self.weight_init()

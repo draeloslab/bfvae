@@ -180,6 +180,8 @@ class Solver(object):
         # networks and optimizers
         self.batch_size = args.batch_size
         self.z_dim = args.z_dim
+        self.recon_w = args.recon_w
+        self.kl_w = args.kl_w
         self.eta = args.eta
         self.gamma = args.gamma
         self.lr_VAE = args.lr_VAE
@@ -354,12 +356,11 @@ class Solver(object):
             # relevance vector
             pv, logpv = self.pvnet()
             # kl loss
-            kls = 0.5 * ( \
-                  -1 - logvar + logpv + (mu**2+std**2)/pv )  # (n x z_dim)
-            loss_kl = kls.sum(1).mean()
+            # kls = 0.5 * ( \
+            #       -1 - logvar + logpv + (mu**2+std**2)/pv )  # (n x z_dim)
+            # loss_kl = kls.sum(1).mean()
+            loss_kl = -0.5 * (1 + logvar - mu.pow(2) - logvar.exp()).sum(1).mean()
 
-            # kl_loss = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-            
             # reparam'ed samples
             if self.use_cuda:
                 Eps = torch.randn(mu.shape, device='cuda')
@@ -387,7 +388,7 @@ class Solver(object):
             loss_pv_reg = ((pv-1.0)**2).sum()
             
             # total loss for vae
-            vae_loss = loss_recon + loss_kl + self.gamma*loss_tc + \
+            vae_loss = self.recon_w*loss_recon + self.kl_w*loss_kl + self.gamma*loss_tc + \
                        self.eta*loss_pv_reg
             
             # update vae
