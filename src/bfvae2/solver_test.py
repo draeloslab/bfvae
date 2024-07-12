@@ -681,7 +681,7 @@ class Solver(object):
         fname = os.path.join(self.output_dir_recon, 'recon_%s.jpg' % iters) 
         mkdirs(self.output_dir_recon)
         save_image( 
-          tensor=merged, filename=fname, nrow=2*int(np.sqrt(n)), 
+          tensor=merged, fp=fname, nrow=2*int(np.sqrt(n)), 
           pad_value=1
         )
 
@@ -702,7 +702,7 @@ class Solver(object):
         fname = os.path.join(self.output_dir_synth, 'synth_%s.jpg' % iters)
         mkdirs(self.output_dir_synth)
         save_image( 
-          tensor=X, filename=fname, nrow=int(np.sqrt(howmany)), 
+          tensor=X, fp=fname, nrow=int(np.sqrt(howmany)), 
           pad_value=1
         )
         
