@@ -1,6 +1,8 @@
 # bfvae
 
-This is forked from [seqam-lab/bfvae](https://github.com/seqam-lab/bfvae). These original changes can also be found on the branch [original](https://github.com/draeloslab/bfvae/tree/original).
+* This is forked from [seqam-lab/bfvae](https://github.com/seqam-lab/bfvae)
+* These original changes can also be found on the branch [original](https://github.com/draeloslab/bfvae/tree/original)
+* The main paper is [here](https://github.com/draeloslab/bfvae/blob/master/docs/BayesFactor-VAE-main.pdf) and the supplement is [here](https://github.com/draeloslab/bfvae/blob/master/docs/BayesFactor-VAE-supplement.pdf)
 
 **This is the project page for Bayes-Factor-VAE: Hierarchical Bayesian Deep Auto-Encoder Models forFactor Disentanglement.
 The work was accepted by ICCV 2019 Oral.**
